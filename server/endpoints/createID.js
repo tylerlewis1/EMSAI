@@ -11,7 +11,7 @@ const router = express.Router();
 
 // Enable CORS properly
 router.use(cors({
-  origin: "http://localhost:3000",
+  origin: "*",
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type", "Authorization", "OpenAI-Beta"]
 }));
@@ -37,7 +37,7 @@ router.post("/create", async (req, res) => {
     
     // Add session creation to batch
     batch.set(sessionDoc, {
-      wsUrl: `ws://localhost:${process.env.PORT || 8080}?sessionId=${id}`,
+      wsUrl: `${process.env.WSURL}:${process.env.PORT || 8080}?sessionId=${id}`,
       Name: req.body.Name || "",
       Age: req.body.Age || "",
       Issue: req.body.Issue || "",

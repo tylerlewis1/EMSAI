@@ -22,11 +22,11 @@ app.use("/", createIDRouter);
 //creates HTTP server
 const httpServer = http.createServer(app);
 httpServer.listen(HTTP_PORT, () => {
-  console.log(`HTTP server running on http://localhost:${HTTP_PORT}`);
+  console.log(`HTTP server running on ${process.env.SERVERIP}:${HTTP_PORT}`);
 });
 //websocket server for realtime communication
 const wss = new WebSocketServer({ port: WS_PORT });
-console.log(`WebSocket server running on ws://localhost:${WS_PORT}`);
+console.log(`WebSocket server running on ${process.env.WSURL}:${WS_PORT}`);
 //on client connection
 wss.on("connection", (ws, req) => {
     //get sessionId from URL query
