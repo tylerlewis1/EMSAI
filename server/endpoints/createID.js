@@ -21,6 +21,9 @@ router.use(bodyParser.json());
 // -----------------------
 // CREATE EMS SESSION
 // -----------------------
+router.get("/test", async (req, res) => {
+  res.send("working");
+});
 router.post("/create", async (req, res) => {
   try {
     const id = randomBytes(6).toString("hex");
