@@ -1,6 +1,6 @@
 // server/index.js
 import { WebSocketServer } from "ws";
-import http from "http";
+import https from "https";
 import url from "url";
 import express from "express";
 import dotenv from "dotenv";
@@ -20,8 +20,8 @@ app.use(cors());
 // Mount all routes from http endpoints
 app.use("/", createIDRouter);
 //creates HTTP server
-const httpServer = http.createServer(app);
-httpServer.listen(HTTP_PORT, () => {
+const httpsServer = https.createServer(app);
+httpsServer.listen(HTTP_PORT, () => {
   console.log(`HTTP server running on ${process.env.SERVERIP}:${HTTP_PORT}`);
 });
 //websocket server for realtime communication
