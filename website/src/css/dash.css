@@ -1,0 +1,126 @@
+
+.dash {
+  font-family: "Inter", sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  color: #111827;
+  overflow-y: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  overflow-x: hidden;
+  
+}
+
+
+.sidebar {
+  background: #1e293b;
+  color: white;
+  min-width: 250px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+a{
+  text-decoration: none;
+  color: white;
+}
+
+.sidebar nav li {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.sidebar nav li:hover,
+.sidebar nav .active {
+  background: #334155;
+}
+
+.logoutBtn {
+  margin-top: auto;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.menuToggle{
+    display: none;
+}
+
+.logoutBtn:hover {
+  background: #dc2626;
+}
+.closeSideBar{
+    display: none;
+  }
+.dashHeader{
+    padding: 10px;
+    display: block;
+    width: 100vw;
+    height: min-content;
+}
+.logo{
+    padding: 10px;
+}
+/* content */
+.content {
+    display: block;
+    width: 100%;
+    height: 85%;
+    overflow-y: scroll;
+}
+
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+  .closeSideBar{
+    display: block;
+    position:absolute;
+    right: 20px;
+  }
+  .closeSideBar:hover{
+    cursor: pointer;
+  }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 100;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .menuToggle {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    font-size: 4vw;
+    position: relative;
+    bottom: 10px;
+    padding: 15px;
+    }
+    .dashHeader div{
+        display: inline-block;
+        
+    }
+    
+}

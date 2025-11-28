@@ -1,0 +1,184 @@
+/* WRAP EVERYTHING INSIDE .instructor-page */
+ * {
+  margin: 0;
+}
+
+/* ===========================
+   Login Screen
+=========================== */
+.instructor-page .admin-login {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #111827;
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.35);
+}
+
+.instructor-page .admin-login h2 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.instructor-page .admin-login input {
+  width: 100%;
+  padding: 12px;
+  background: #1f2937;
+  color: white;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.instructor-page .admin-login button {
+  width: 100%;
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ===========================
+   Dashboard Layout
+=========================== */
+.instructor-page .admin-dashboard {
+  padding: 20px;
+  min-height: 100vh;
+  background: #0f172a;
+  color: white;
+}
+
+.instructor-page .admin-dashboard h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.instructor-page .session-id {
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+/* ===========================
+   Responsive Grid
+=========================== */
+
+.instructor-page .grid-3 {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+  .instructor-page .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .instructor-page .admin-dashboard h1 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .instructor-page .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-page .admin-dashboard {
+    padding: 16px;
+  }
+}
+
+/* ===========================
+   Cards
+=========================== */
+.instructor-page .card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+/* ===========================
+   Vitals Section
+=========================== */
+.instructor-page .vital-row {
+  margin-bottom: 20px;
+}
+
+.instructor-page .vital-row label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+.instructor-page .vital-row input[type="range"] {
+  width: 100%;
+  touch-action: none;
+}
+
+/* ===========================
+   Inputs & Controls
+=========================== */
+.instructor-page select,
+.instructor-page textarea {
+  width: 95%;
+  padding: 12px;
+  background: #0f172a;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.instructor-page textarea {
+  height: 100px;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+.instructor-page button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 15px;
+  font-size: 1rem;
+}
+
+.instructor-page .btn-green {
+  background: #10b981;
+  color: black;
+}
+
+.instructor-page .btn-yellow {
+  background: #f59e0b;
+  color: black;
+}
+
+.instructor-page .btn-blue {
+  background: #3b82f6;
+  color: white;
+}
+
+.instructor-page .btn-red {
+  background: #ef4444;
+  color: white;
+}
+
+/* Larger tap targets for mobile */
+@media (max-width: 600px) {
+  .instructor-page button {
+    padding: 14px;
+    font-size: 1.1rem;
+  }
+}
