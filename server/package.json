@@ -17,6 +17,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "firebase": "^12.6.0",
+    "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "node-fetch": "^3.3.2",

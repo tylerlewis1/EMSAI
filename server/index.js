@@ -1,12 +1,17 @@
 // server/index.js
 import { WebSocketServer } from "ws";
 import http from "http";
+import https from "https";
+import fs from "fs";
 import url from "url";
 import express from "express";
 import dotenv from "dotenv";
 import { doc, getDoc, writeBatch, arrayRemove } from "firebase/firestore";
 import { db } from "./firebase.js";
 import createIDRouter from "./endpoints/createID.js";
+var privateKey  = fs.readFileSync('./private.key', 'utf8');
+var certificate = fs.readFileSync('./certificate.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 import cors from "cors";
 const sessions = {};
 //load environment variables
@@ -20,12 +25,15 @@ app.use(cors());
 // Mount all routes from http endpoints
 app.use("/", createIDRouter);
 //creates HTTP server
-const httpServer = http.createServer(app);
-httpServer.listen(HTTP_PORT, () => {
+// const httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+httpsServer.listen(HTTP_PORT, () => {
   console.log(`HTTP server running on ${process.env.SERVERIP}:${HTTP_PORT}`);
 });
 //websocket server for realtime communication
-const wss = new WebSocketServer({ port: WS_PORT });
+const wss = new WebSocketServer({ 
+    server: httpsServer  // Attach to HTTPS server
+});
 console.log(`WebSocket server running on ${process.env.WSURL}:${WS_PORT}`);
 //on client connection
 wss.on("connection", (ws, req) => {
@@ -52,17 +60,15 @@ wss.on("connection", (ws, req) => {
         if(jsonMSG.type === "session.end"){
             //close all connections in the session
             for(var i = 0; i < sessions[sessionId].length; i++){
-                const client = sessions[sessionId][i];
-                if(client.readyState === WebSocket.OPEN){
+                    const client = sessions[sessionId][i];
                     client.send("Session ended by admin");
                     client.close();
-                }
+                    delete sessions[sessionId];
+                    delSessionDoc(sessionId);
+                    console.log("Session ended:", sessionId);
+                    return;
             }
             //delete the session
-            delete sessions[sessionId];
-            delSessionDoc(sessionId);
-            console.log("Session ended:", sessionId);
-            return;
         }
         for(var i = 0; i < sessions[sessionId].length; i++){
             const client = sessions[sessionId][i];
