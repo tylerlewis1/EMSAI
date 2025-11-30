@@ -1,185 +1,531 @@
-body {
+/* Modern CSS Reset and Base Styles */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f8f9fa;
-  color: #222;
-}
-section h2{
-    text-align: center;
-    padding: 20px;
-}
-a {
-  text-decoration: none;
-  color: inherit;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* NAVBAR */
-.navbar {
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Modern Header */
+.modern-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 30px;
-  background: white;
-  border-bottom: 1px solid #ddd;
 }
 
 .logo {
-  font-size: 26px;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .nav-links a {
-  margin-left: 20px;
-  font-size: 15px;
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-.btn {
-  padding: 10px 18px;
-  background: #1a73e8;
+.nav-links a:hover {
+  color: #2563eb;
+}
+
+.btn-login {
+  background: #2563eb;
   color: white;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 100px 20px;
+.btn-login:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
 }
 
-.hero h1 {
-  font-size: 48px;
-  font-weight: bold;
-}
-
-.hero p {
-  max-width: 600px;
-  margin: 15px auto;
-  font-size: 18px;
-  color: #555;
-}
-
-.cta {
-  display: inline-block;
-  padding: 14px 26px;
-  margin-top: 20px;
-  background: #1a73e8;
+/* Button Styles */
+.cta-primary {
+  background: #f59e0b;
   color: white;
-  border-radius: 10px;
-  font-size: 18px;
-}
-
-/* HOW IT WORKS */
-.how {
-  padding: 70px 20px;
-  background: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
   text-align: center;
 }
 
-.how-grid {
+.cta-primary:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+}
+
+.cta-primary.large {
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+}
+
+.cta-primary:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cta-secondary {
+  background: transparent;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.cta-secondary:hover {
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Coming Soon Specific Styles */
+.coming-soon-app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.coming-soon-main {
+  padding-top: 80px;
+}
+
+.coming-soon-hero {
+  padding: 80px 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  color: white;
 }
 
-.how-card {
-  background: #f2f4f8;
-  padding: 25px;
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image {
+  max-width: 100%;
   border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* FEATURES */
-.features {
-  padding: 70px 20px;
+/* Form Styles */
+.waitlist-section, .invite-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+}
+
+.waitlist-section h3, .invite-section h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-input {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+}
+
+.form-note {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.switch-form {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.text-link {
+  background: none;
+  border: none;
+  color: #fbbf24;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.text-link:hover {
+  color: #f59e0b;
+}
+
+/* Success Message */
+.success-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.success-message h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.success-message p {
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+/* Stats */
+.waitlist-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+/* Features Grid */
+.coming-soon-features {
+  padding: 80px 0;
+  background: white;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  max-width: 900px;
-  margin: auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
 }
 
-.feature {
-  background: white;
-  padding: 20px;
+.feature-card {
+  padding: 2rem;
+  background: #f8fafc;
   border-radius: 12px;
-  border: 1px solid #ddd;
   text-align: center;
-  font-weight: 600;
+  transition: transform 0.3s ease;
 }
 
-/* PRICING */
-.pricing {
-  padding: 80px 20px;
-  background: #f2f4f8;
+.feature-card:hover {
+  transform: translateY(-5px);
 }
 
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  max-width: 1000px;
-  margin: auto;
+.feature-card .feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
-.pricing-card {
-  background: white;
-  padding: 30px;
-  border-radius: 14px;
+.feature-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.feature-card p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Dashboard Preview */
+.dashboard-preview {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.preview-content {
   text-align: center;
-  border: 1px solid #ddd;
 }
 
-.pricing-card.highlight {
-  border: 2px solid #1a73e8;
+.preview-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
 }
 
-.price {
-  font-size: 40px;
-  margin: 10px 0;
-  color: #1a73e8;
+.preview-content p {
+  font-size: 1.25rem;
+  color: #6b7280;
+  margin-bottom: 3rem;
 }
 
-.price span {
-  font-size: 18px;
-  color: #555;
+.dashboard-preview-image {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.pricing-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 15px 0;
-}
-
-.pricing-card li {
-  margin: 8px 0;
-  color: #444;
-}
-
-/* CTA */
-.cta-section {
+/* Final CTA */
+.final-cta {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   text-align: center;
-  padding: 80px 20px;
 }
 
-/* FOOTER */
-.footer {
-  padding: 20px;
-  background: white;
+.final-cta h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.final-cta p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+/* Footer */
+.modern-footer {
+  background: #1f2937;
+  color: white;
+  padding: 3rem 0 1rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.footer-brand .logo {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.footer-brand p {
+  color: #d1d5db;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.footer-links a {
+  color: #d1d5db;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
   text-align: center;
-  color: #777;
-  border-top: 1px solid #ddd;
+  color: #9ca3af;
 }
 
-/* MOBILE */
-@media (max-width: 700px) {
-  .hero h1 {
-    font-size: 36px;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
   }
-  .nav-links {
-    display: none;
+
+  .coming-soon-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 40px 0;
+    gap: 2rem;
   }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .input-group {
+    flex-direction: column;
+  }
+  
+  .waitlist-stats {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modern-header .nav-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .header-container {
+    padding: 1rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .preview-content h2 {
+    font-size: 2rem;
+  }
+
+  .final-cta h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Add this to your existing CSS file */
+
+/* Form Message Styles */
+.form-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.form-message.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.form-message.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Update the existing form styles to accommodate messages */
+.waitlist-section, .invite-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+  position: relative;
 }

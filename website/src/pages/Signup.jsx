@@ -19,10 +19,7 @@ export default function Siginup() {
                     Name: name,
                     Phone: phone,
                     Credits: 0,
-                    Sessions: [{
-                      NAME: "test",
-                      ID: "sajdkakdjas"
-                    }],
+                    Sessions: [],
                 });
                 console.log(auth.currentUser.uid);
                 nav("/dash");

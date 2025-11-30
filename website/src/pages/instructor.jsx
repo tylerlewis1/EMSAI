@@ -33,7 +33,7 @@ export default function Instructor() {
 
       const data = snap.data();
       setSessionData(data);
-      const ws = new WebSocket(`ws://localhost:8080?sessionId=${sessionId}`);
+      const ws = new WebSocket(`wss://server.gptems.com:8081?sessionId=${sessionId}`);
       // const ws = new WebSocket(`ws://192.168.27.155:8080?sessionId=${sessionId}`);
 
       wsRef.current = ws;

@@ -51,7 +51,7 @@ export default function Dash(){
            <div className="dash"> 
             <aside className={`sidebar ${menuOpen ? "open" : ""}`}>
                 <h3 className={"closeSideBar"}onClick={() => setMenuOpen(false)}>X</h3>
-                <h2 className="logo">GTPEMS</h2>
+                <h2 className="logo" style={{color: "white"}}>GTPEMS</h2>
                 <nav>
                 <ul>
                     <li onClick={()=>{setScreenState(1)}} className={(screenState == 1)? ("active") : ("not")}>Dashboard</li>

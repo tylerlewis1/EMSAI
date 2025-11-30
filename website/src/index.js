@@ -8,11 +8,13 @@ import Dash from './pages/Dash.jsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Signup from "./pages/Signup.jsx"
 import Signin from './pages/Signin.jsx';
+import Home from './pages/Home.jsx';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    <BrowserRouter>
     <Routes>
       <Route path="/" Component={App}/>
+      <Route path="/home" Component={Home}/>
       <Route path="/signin" Component={Signin}/>
       <Route path='/signup' Component={Signup}/>
       <Route path='/dash' Component={Dash}/>

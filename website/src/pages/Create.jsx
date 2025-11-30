@@ -15,7 +15,7 @@ export default function Create() {
     const [sessionID, setSessionID] = useState();
     const [allergies, setAllergies] = useState();
     const [wants, setWants] = useState();
-    const url = "http://localhost:8081/create";
+    const url = "https://server.gptems.com/create";
 
     const CreateSession = async () => {
         const res = await fetch(url, {

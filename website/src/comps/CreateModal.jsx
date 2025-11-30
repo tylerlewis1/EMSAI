@@ -17,7 +17,7 @@ export default function Create() {
     const [allergies, setAllergies] = useState();
     const [wants, setWants] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const url = "http://localhost:8081/create";
+    const url = "https://server.gptems.com:8081/create";
     const onClose = () =>{
         setIsOpen(false);
     }

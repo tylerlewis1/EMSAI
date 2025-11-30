@@ -19,6 +19,7 @@ export default function Sessions({Data}){
                             <h1>{session.NAME}</h1>
                             <br/>
                             <p>Session ID: {session.ID}</p>
+                            <p>Crew link: https://gptems.com/crew</p>
                         </div>
                     )
                 })}

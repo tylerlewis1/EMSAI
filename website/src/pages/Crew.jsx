@@ -157,7 +157,7 @@ function triggerIdleSpeech() {
     console.log("voice:", session.Voice);
     async function go() {
       try {
-        const resp = await fetch("http://localhost:8081/realtime/token", {
+        const resp = await fetch("https://server.gptems.com:8081/realtime/token", {
           method: "POST",
           headers: { "Content-Type": "application/json" }});
         const data = await resp.json();
@@ -297,7 +297,7 @@ function triggerIdleSpeech() {
 
         console.log("📨 SEND OFFER → PROXY");
 
-        const answerResp = await fetch("http://localhost:8081/realtime/webrtc", {
+        const answerResp = await fetch("https://server.gptems.com:8081/realtime/webrtc", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
