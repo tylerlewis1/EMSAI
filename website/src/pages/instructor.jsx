@@ -86,7 +86,7 @@ export default function Instructor() {
         data: { name: intervention + (dose ? ` — ${dose}` : "") },
       })
     );
-    setDose(null);
+    setDose("");
     setIntervention("");
     console.log("Intervention sent");
   };
@@ -109,7 +109,18 @@ export default function Instructor() {
     setMessage("");
     console.log("Behavior suggestion sent");
   };
+  //nudge
+  const nudge = () => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
 
+    ws.send(
+      JSON.stringify({
+        type: "ai.talk",
+      })
+    );
+    console.log("nudged");
+  };
   // --------------------------
   // END SESSION
   // --------------------------
@@ -350,6 +361,9 @@ export default function Instructor() {
 
               <button className="btn-blue" onClick={suggestBehavior}>
                 Send Behavior Cue
+              </button>
+              <button className="btn-blue" onClick={nudge}>
+                Nudge
               </button>
 
               <button className="btn-red" onClick={endSession}>

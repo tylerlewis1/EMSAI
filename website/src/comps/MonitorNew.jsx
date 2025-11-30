@@ -364,7 +364,7 @@ export default function MonitorNew({v, setV}) {
           
           <div className="vital-box spo2-box">
             <div className="vital-label">SpO₂</div>
-            <div className="vital-value">{Math.round(v.CAP)}</div>
+            <div className="vital-value">{Math.round(v.SPO2)}</div>
             <div className="vital-unit">%</div>
           </div>
           

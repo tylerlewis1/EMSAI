@@ -91,6 +91,8 @@ export default function Crew() {
               }
             }));
             
+          } else if(jsonMSG.type == "ai.talk"){
+            triggerIdleSpeech();
           }
           resetIdleTimer();
         }
@@ -141,7 +143,6 @@ function triggerIdleSpeech() {
     type: "response.create",
     response: {
       modalities: ["audio", "text"],
-      voice: session.Voice,
       instructions: "Speak verbally as the patient.",
       conversation: "auto"
     }
