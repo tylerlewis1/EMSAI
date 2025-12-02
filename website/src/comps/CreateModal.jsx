@@ -75,7 +75,7 @@ export default function Create() {
     if (!isOpen){ 
         return(
             <>
-                <button className="create-button" style={{margin: "auto", display: "block", width: "100%"}} onClick={() => {setIsOpen(true)}}>Create Senario</button>
+                <button className="create-button" style={{margin: "auto", display: "block", width: "100%"}} onClick={() => {setIsOpen(true)}}>Create Scenario</button>
             </>
         );
     }

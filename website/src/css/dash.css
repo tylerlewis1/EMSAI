@@ -1,4 +1,7 @@
 
+*::-webkit-scrollbar {
+  display: none;
+}
 .dash {
   font-family: "Inter", sans-serif;
   background: #f9fafb;
@@ -79,9 +82,10 @@ a{
 /* content */
 .content {
     display: block;
-    width: 100%;
+    width: 80%;
     height: 85%;
     overflow-y: scroll;
+    scrollbar-width: 0px;
 }
 
 

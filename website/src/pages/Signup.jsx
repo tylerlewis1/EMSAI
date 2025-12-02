@@ -18,7 +18,7 @@ export default function Siginup() {
                 setDoc(userdocRef, {
                     Name: name,
                     Phone: phone,
-                    Credits: 0,
+                    Credits: 25,
                     Sessions: [],
                 });
                 console.log(auth.currentUser.uid);

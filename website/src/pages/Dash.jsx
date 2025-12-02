@@ -5,6 +5,7 @@ import {onAuthStateChanged} from "firebase/auth"
 import "../css/dash.css";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import Sessions from "../comps/Sessions";
+import Settings from "../comps/Settings";
 export default function Dash(){
     const [userData, setUserData] = useState(null);
     const [screenState, setScreenState] = useState(1);
@@ -55,7 +56,7 @@ export default function Dash(){
                 <nav>
                 <ul>
                     <li onClick={()=>{setScreenState(1)}} className={(screenState == 1)? ("active") : ("not")}>Dashboard</li>
-                    <li onClick={()=>{setScreenState(2)}} className={(screenState == 2)? ("active") : ("not")}>Saved Senarios</li>
+                    {/* <li onClick={()=>{setScreenState(2)}} className={(screenState == 2)? ("active") : ("not")}>Saved Senarios</li> */}
                     <li onClick={()=>{setScreenState(3)}} className={(screenState == 3)? ("active") : ("not")}>Settings</li>
                     <a href="mailto:tglewis247@gmail.com"><li>Contact</li></a>
                 </ul>
@@ -79,7 +80,7 @@ export default function Dash(){
                 <div className="content">
                     
                     {screenState === 1 && <Sessions Data={userData}/>}
-
+                    {screenState === 3 && <Settings/>}
                 </div>
              </div>
             </div>

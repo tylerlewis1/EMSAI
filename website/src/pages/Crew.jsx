@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { db } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import MonitorNew from "../comps/MonitorNew.jsx";
+import "../css/crew.css";
 export default function Crew() {
   const [sessionID, setSessionID] = useState("");
   const [session, setSession] = useState(null);
@@ -25,6 +26,8 @@ export default function Crew() {
     return onSnapshot(ref, (snap) => {
       if (!snap.exists()) {
         console.log("❌ Session not found");
+        alert("Session not found");
+        window.location.reload();
         return;
       }
       const data = snap.data();
@@ -37,7 +40,8 @@ export default function Crew() {
         wsRef.current = ws;
         ws.onopen = () => console.log("WS Connected");
         ws.onclose = () => {
-            console.log("WS Disconnected")
+            console.log("WS Disconnected");
+            document.location.reload();
           };
         ws.onmessage = (msg) =>{
           console.log("WS Message:", msg.data);
