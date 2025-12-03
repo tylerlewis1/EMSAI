@@ -7,7 +7,7 @@ import url from "url";
 import express from "express";
 import dotenv from "dotenv";
 import { doc, getDoc, writeBatch, arrayRemove } from "firebase/firestore";
-import { db } from "./firebase.js";
+import { db } from "./firebaseadmin.js";
 import createIDRouter from "./endpoints/createID.js";
 var privateKey  = fs.readFileSync('./private.key', 'utf8');
 var certificate = fs.readFileSync('./certificate.crt', 'utf8');
@@ -72,7 +72,7 @@ wss.on("connection", (ws, req) => {
         }
         for(var i = 0; i < sessions[sessionId].length; i++){
             const client = sessions[sessionId][i];
-            if(client !== ws && client.readyState === WebSocket.OPEN){
+            if(client !== ws){
                 //forward message to other clients in the same session
                 client.send(msg.toString());
             } else if (client == ws){
@@ -90,8 +90,7 @@ wss.on("connection", (ws, req) => {
         //if no clients left in session, delete the session
         if(sessions[sessionId].length === 0){
             delete sessions[sessionId];
-            // const documentRef = doc(db, "sessions", sessionId);
-            // deleteDoc(documentRef);
+           delSessionDoc(sessionId);
             console.log("Session deleted due to no clients:", sessionId);
         }
     }

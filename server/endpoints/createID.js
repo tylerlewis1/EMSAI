@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
 import { doc, setDoc, updateDoc, arrayUnion, writeBatch} from "firebase/firestore";
-import { db } from "../firebase.js";
+import { db } from "../firebaseadmin.js";
 
 const router = express.Router();
 
