@@ -97,48 +97,39 @@ wss.on("connection", (ws, req) => {
 });
 });
 async function delSessionDoc(sessionID) {
-    try {
-        const sessionDoc = doc(db, "sessions", sessionID);
-        const sessionSnapshot = await getDoc(sessionDoc);
-        
-        if (!sessionSnapshot.exists()) {
-            console.log("Session does not exist");
-            return;
-        }
+  try {
+    const sessionRef = db.collection("sessions").doc(sessionID);
+    const sessionSnap = await sessionRef.get();
 
-        const sessionData = sessionSnapshot.data();
-        const userID = sessionData.Owner;
-        const userDoc = doc(db, "users", userID);
-        const userSnapshot = await getDoc(userDoc);
-        
-        if (!userSnapshot.exists()) {
-            console.log("User does not exist");
-            // Still delete the orphaned session
-            await deleteDoc(sessionDoc);
-            return;
-        }
-
-        // Create a batched write - both operations succeed or fail together
-        const batch = writeBatch(db);
-        
-        // Remove session from user's Sessions array
-        batch.update(userDoc, {
-            Sessions: arrayRemove({
-                NAME: sessionData.Name || sessionData.NAME,
-                ID: sessionID
-            })
-        });
-        
-        // Delete the session document
-        batch.delete(sessionDoc);
-        
-        // Commit both operations atomically
-        await batch.commit();
-        
-        console.log("Session and user reference removed successfully");
-        
-    } catch (error) {
-        console.error("Error deleting session:", error);
-        throw error; // Re-throw to let caller know it failed completely
+    if (!sessionSnap.exists) {
+      console.log("Session does not exist");
+      return;
     }
+
+    const sessionData = sessionSnap.data();
+    const userID = sessionData.Owner;
+
+    const userRef = db.collection("users").doc(userID);
+    const userSnap = await userRef.get();
+
+    // Build batch
+    const batch = db.batch();
+
+    if (userSnap.exists) {
+      batch.update(userRef, {
+        Sessions: admin.firestore.FieldValue.arrayRemove({
+          NAME: sessionData.Name || sessionData.NAME,
+          ID: sessionID
+        })
+      });
+    }
+
+    batch.delete(sessionRef);
+
+    await batch.commit();
+    console.log("Session deleted cleanly");
+
+  } catch (err) {
+    console.error("ERROR deleting session:", err);
+  }
 }
