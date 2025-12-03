@@ -1,15 +1,14 @@
-// server/endpoints/createID.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
-import { doc, setDoc, updateDoc, arrayUnion, writeBatch} from "firebase/firestore";
+import admin from "firebase-admin";
 import { db } from "../firebaseadmin.js";
 
 const router = express.Router();
 
-// Enable CORS properly
+// Enable CORS
 router.use(cors({
   origin: "*",
   methods: ["GET", "POST"],
@@ -19,24 +18,25 @@ router.use(cors({
 router.use(bodyParser.json());
 
 // -----------------------
+// TEST
+// -----------------------
+router.get("/test", (req, res) => res.send("working"));
+
+
+// -----------------------
 // CREATE EMS SESSION
 // -----------------------
-router.get("/test", async (req, res) => {
-  res.send("working");
-});
 router.post("/create", async (req, res) => {
   try {
     const id = randomBytes(6).toString("hex");
-    console.log("Creating EMS session:", id);
+    console.log("Creating session:", id);
 
-    const sessionDoc = doc(db, "sessions", id);
-    const userDoc = doc(db, "users", req.body.UserUID);
-    
-    // Create a batched write
-    const batch = writeBatch(db);
-    
-    // Add session creation to batch
-    batch.set(sessionDoc, {
+    const sessionRef = db.collection("sessions").doc(id);
+    const userRef = db.collection("users").doc(req.body.UserUID);
+
+    const batch = db.batch();
+
+    batch.set(sessionRef, {
       wsUrl: `${process.env.WSURL}:${process.env.PORT || 8080}?sessionId=${id}`,
       Name: req.body.Name || "",
       Age: req.body.Age || "",
@@ -50,6 +50,7 @@ router.post("/create", async (req, res) => {
       MedicalHx: req.body.MedicalHx || "",
       Medications: req.body.Medications || "",
       Owner: req.body.UserUID || null,
+
       HR: 60,
       BPS: 120,
       BPD: 80,
@@ -58,29 +59,29 @@ router.post("/create", async (req, res) => {
       BGL: 90,
       CAP: 40,
       EKG: "normal",
+
       createdAt: Date.now(),
       active: true,
     });
-    
-    // Add user update to batch
-    batch.update(userDoc, {
-      Sessions: arrayUnion({
+
+    batch.update(userRef, {
+      Sessions: admin.firestore.FieldValue.arrayUnion({
         NAME: req.body.Name || "",
-        ID: id
+        ID: id,
       })
     });
-    
-    // Execute both operations atomically
+
     await batch.commit();
 
-    console.log("Session created successfully:", id);
+    console.log("Session created:", id);
     res.json({ sessionId: id });
-    
+
   } catch (err) {
     console.error("Create session error:", err);
     res.status(500).json({ error: "Failed to create session" });
   }
 });
+
 
 // -----------------------
 // GENERATE EPHEMERAL KEY
@@ -101,22 +102,15 @@ router.post("/realtime/token", async (req, res) => {
     );
 
     const raw = await resp.text();
-    // console.log("RAW OPENAI client_secrets:", raw);
-
     let data;
+
     try {
       data = JSON.parse(raw);
-    } catch (e) {
+    } catch {
       return res.status(500).json({ error: "Invalid JSON from OpenAI" });
     }
 
-    if (data.error) {
-      return res.status(500).json({ error: data.error.message });
-    }
-
-    if (!data.value) {
-      return res.status(500).json({ error: "Missing ephemeral key" });
-    }
+    if (data.error) return res.status(500).json({ error: data.error.message });
 
     res.json({
       ephemeralKey: data.value,
@@ -130,28 +124,26 @@ router.post("/realtime/token", async (req, res) => {
   }
 });
 
+
 // -----------------------
-// PROXY WebRTC OFFER → OpenAI
+// PROXY WEBRTC → OPENAI
 // -----------------------
 router.post("/realtime/webrtc", async (req, res) => {
   try {
     const { offer, ephemeralKey } = req.body;
 
-    if (!offer || !ephemeralKey) {
+    if (!offer || !ephemeralKey)
       return res.status(400).json({ error: "Missing offer or ephemeral key" });
-    }
-
-    console.log("Forwarding SDP offer → OpenAI");
 
     const response = await fetch(
       "https://api.openai.com/v1/realtime/calls?model=gpt-4o-realtime-preview",
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.OPENAIKEY}`,   // REAL API key here
-          "OpenAI-Session": ephemeralKey,                       // ✔ CORRECT
+          "Authorization": `Bearer ${process.env.OPENAIKEY}`,
+          "OpenAI-Session": ephemeralKey,
           "Content-Type": "application/sdp",
-          "OpenAI-Beta": "realtime=v1"
+          "OpenAI-Beta": "realtime=v1",
         },
         body: offer
       }
@@ -167,7 +159,7 @@ router.post("/realtime/webrtc", async (req, res) => {
     res.send(answer);
 
   } catch (err) {
-    console.error("🔥 Proxy error:", err);
+    console.error("Proxy error:", err);
     res.status(500).json({ error: "Proxy WebRTC failed" });
   }
 });
