@@ -6,7 +6,7 @@ import fs from "fs";
 import url from "url";
 import express from "express";
 import dotenv from "dotenv";
-import { doc, getDoc, writeBatch, arrayRemove } from "firebase/firestore";
+import admin from "firebase-admin";
 import { db } from "./firebaseadmin.js";
 import createIDRouter from "./endpoints/createID.js";
 var privateKey  = fs.readFileSync('./private.key', 'utf8');
