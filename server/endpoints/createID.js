@@ -4,8 +4,7 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
 import admin from "firebase-admin";
-import { db } from "../firebaseadmin.js";
-import {increment} from "firebase/firestore"
+import { db, increment } from "../firebaseadmin.js";
 const router = express.Router();
 
 // Enable CORS
