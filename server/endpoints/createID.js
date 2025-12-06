@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
 import admin from "firebase-admin";
-import { db, increment } from "../firebaseadmin.js";
+import { db } from "../firebaseadmin.js";
 const router = express.Router();
 
 // Enable CORS
@@ -64,7 +64,7 @@ router.post("/create", async (req, res) => {
     });
 
     batch.update(userRef, {
-      Credits: increment(-1),
+      Credits: admin.firestore.FieldValue.increment(-1),
       Sessions: admin.firestore.FieldValue.arrayUnion({
         NAME: req.body.Name || "",
         ID: id,
