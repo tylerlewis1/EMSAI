@@ -148,21 +148,7 @@ router.post("/realtime/webrtc", async (req, res) => {
         body: offer
       }
     );
-//   const model = req.body.model || "gpt-4o-mini-realtime";
 
-// const response = await fetch(
-//   `https://api.openai.com/v1/realtime/calls?model=${model}`,
-//   {
-//     method: "POST",
-//     headers: {
-//       "Authorization": `Bearer ${process.env.OPENAIKEY}`,
-//       "OpenAI-Session": ephemeralKey,
-//       "Content-Type": "application/sdp",
-//       "OpenAI-Beta": "realtime=v1",
-//     },
-//     body: offer
-//   }
-// );
     const answer = await response.text();
 
     if (!response.ok) {
