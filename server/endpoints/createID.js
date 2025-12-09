@@ -136,7 +136,7 @@ router.post("/realtime/webrtc", async (req, res) => {
       return res.status(400).json({ error: "Missing offer or ephemeral key" });
 
     const response = await fetch(
-      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-mini-realtime",
+      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-realtime",
       {
         method: "POST",
         headers: {
