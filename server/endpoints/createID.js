@@ -132,8 +132,13 @@ router.post("/realtime/webrtc", async (req, res) => {
   try {
     const { offer, ephemeralKey } = req.body;
 
-    if (!offer || !ephemeralKey)
+    if (!offer || !ephemeralKey) {
+      console.error("❌ Missing offer or ephemeralKey");
       return res.status(400).json({ error: "Missing offer or ephemeral key" });
+    }
+
+    console.log("📡 Using model: gpt-4o-mini-realtime");
+    console.log("OFFER LENGTH:", offer.length);
 
     const response = await fetch(
       "https://api.openai.com/v1/realtime/calls?model=gpt-4o-mini-realtime",
@@ -152,14 +157,14 @@ router.post("/realtime/webrtc", async (req, res) => {
     const answer = await response.text();
 
     if (!response.ok) {
-      console.error("OpenAI error:", answer);
+      console.error("❌ OpenAI error response:", answer || "EMPTY ERROR");
       return res.status(500).send(answer);
     }
 
     res.send(answer);
 
   } catch (err) {
-    console.error("Proxy error:", err);
+    console.error("🔥 Proxy error:", err);
     res.status(500).json({ error: "Proxy WebRTC failed" });
   }
 });
