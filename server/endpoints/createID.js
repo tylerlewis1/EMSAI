@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
 import admin from "firebase-admin";
-import { db } from "../firebaseadmin.js";
+import { db, increment } from "../firebaseadmin.js";
 const router = express.Router();
 
 // Enable CORS
@@ -136,7 +136,7 @@ router.post("/realtime/webrtc", async (req, res) => {
       return res.status(400).json({ error: "Missing offer or ephemeral key" });
 
     const response = await fetch(
-      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-realtime",
+      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-realtime-preview",
       {
         method: "POST",
         headers: {
