@@ -89,7 +89,7 @@ router.post("/create", async (req, res) => {
 router.post("/realtime/token", async (req, res) => {
   try {
     const resp = await fetch(
-      "https://api.openai.com/v1/realtime/client_secrets",
+      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-mini-realtime",
       {
         method: "POST",
         headers: {
