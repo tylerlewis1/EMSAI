@@ -130,44 +130,43 @@ router.post("/realtime/token", async (req, res) => {
 // -----------------------
 router.post("/realtime/webrtc", async (req, res) => {
   try {
-    const { offer, ephemeralKey } = req.body;
+    const { offer, ephemeralKey, model } = req.body;
 
     if (!offer || !ephemeralKey) {
-      console.error("❌ Missing offer or ephemeralKey");
       return res.status(400).json({ error: "Missing offer or ephemeral key" });
     }
 
-    console.log("📡 Using model: gpt-4o-mini-realtime");
-    console.log("OFFER LENGTH:", offer.length);
+    // Use model sent by frontend OR default
+    const MODEL = model || "gpt-4o-mini-realtime";
 
-    const response = await fetch(
-      "https://api.openai.com/v1/realtime/calls?model=gpt-4o-mini-realtime",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${process.env.OPENAIKEY}`,
-          "OpenAI-Session": ephemeralKey,
-          "Content-Type": "application/sdp",
-          "OpenAI-Beta": "realtime=v1",
-        },
-        body: offer
-      }
-    );
+    const openaiUrl = `https://api.openai.com/v1/realtime/calls?model=${MODEL}`;
+
+    console.log("🔗 Calling OpenAI WebRTC:", openaiUrl);
+
+    const response = await fetch(openaiUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAIKEY}`,
+        "OpenAI-Session": ephemeralKey,
+        "Content-Type": "application/sdp",
+        "OpenAI-Beta": "realtime=v1",
+      },
+      body: offer
+    });
 
     const answer = await response.text();
 
     if (!response.ok) {
-      console.error("❌ OpenAI error response:", answer || "EMPTY ERROR");
+      console.error("❌ OpenAI WebRTC Error:", answer);
       return res.status(500).send(answer);
     }
 
     res.send(answer);
 
   } catch (err) {
-    console.error("🔥 Proxy error:", err);
+    console.error("🔥 Proxy WebRTC error:", err);
     res.status(500).json({ error: "Proxy WebRTC failed" });
   }
 });
-
 
 export default router;
