@@ -1,7 +1,6 @@
-// server/index.js (Full Merged Server Logic)
+// server/index.js (Full Merged Server Logic with Fixes)
 
 import { WebSocketServer } from "ws";
-import http from "http"; // Not used, but kept for completeness
 import https from "https";
 import fs from "fs";
 import url from "url";
@@ -14,20 +13,19 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import { randomBytes } from "crypto";
+import { GoogleGenAI } from "@google/genai"; // Gemini SDK
 
 // ----------------------------------------------------------------------
-// 🚨 GEMINI REAL-TIME CORE IMPORTS (Required for AI functionality)
+// --- Server Configuration & Initialization ---
 // ----------------------------------------------------------------------
-import { GoogleGenAI } from "@google/genai";
+
 // Initialize Gemini (Requires GEMINI_API_KEY in .env)
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-// ----------------------------------------------------------------------
-
 
 // Load environment variables
 dotenv.config();
 
-// --- Server Configuration ---
+// Load SSL/TLS Credentials
 var privateKey  = fs.readFileSync('./private.key', 'utf8');
 var certificate = fs.readFileSync('./certificate.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
@@ -35,20 +33,20 @@ const WS_PORT = process.env.PORT || 8080;
 const HTTP_PORT = process.env.HTTPPORT || 8081;
 
 // --- Global State ---
-const sessions = {}; // Stores active instructor-event WS clients (used by wss)
+const sessions = {}; // Stores active instructor-event WS clients
 
 // --- GEMINI HYBRID MODEL CONSTANTS and STATE ---
 const PRO_GEMINI_MODEL = "gemini-2.5-pro"; // Powerful model for instruction adherence
 const FLASH_GEMINI_MODEL = "gemini-2.5-flash"; // Cost-effective model
 
-// Map to hold which model is currently active for a given ephemeralKey (Crucial for Hybrid)
+// Map to hold which model is currently active for a given ephemeralKey
 const ACTIVE_MODELS = {}; 
 const AI_SESSIONS = {}; // Map to store active Gemini WS connections and conversation history
 // -----------------------------------------------
 
 
 // ======================================================================
-// 1. EXPRESS HTTP/HTTPS SERVER & REST ENDPOINTS (Merged from createID.js)
+// 1. EXPRESS HTTP/HTTPS SERVER & REST ENDPOINTS
 // ======================================================================
 const app = express();
 
@@ -80,7 +78,6 @@ app.post("/create", async (req, res) => {
     const batch = db.batch();
 
     batch.set(sessionRef, {
-      // Points to the instructor/event WS
       wsUrl: `${process.env.WSURL}:${process.env.PORT || 8080}?sessionId=${id}`, 
       Name: req.body.Name || "",
       Age: req.body.Age || "",
@@ -97,7 +94,6 @@ app.post("/create", async (req, res) => {
 
       HR: 60, BPS: 120, BPD: 80, RR: 18, SPO2: 100, BGL: 90, CAP: 40, EKG: "normal",
       
-      // Default AI Model
       AI_MODEL: FLASH_GEMINI_MODEL, 
 
       createdAt: Date.now(),
@@ -125,20 +121,19 @@ app.post("/create", async (req, res) => {
 
 
 // ------------------------------------------------
-// GENERATE EPHEMERAL GEMINI KEY/SESSION (Authentication)
+// GENERATE EPHEMERAL GEMINI KEY/SESSION
 // ------------------------------------------------
 app.post("/realtime/token", async (req, res) => {
   try {
-    // Generates a temporary key for the client to use for the AI WS connection
     const ephemeralKey = randomBytes(16).toString("hex");
     
-    // Initialize the active model mapping for this key (Hybrid Logic)
+    // Initialize the active model mapping (Hybrid Logic)
     ACTIVE_MODELS[ephemeralKey] = FLASH_GEMINI_MODEL;
     
     res.json({
       ephemeralKey: ephemeralKey,
       sessionId: req.body.sessionId || null,
-      expiresAt: Date.now() + (3600 * 1000), // 1 hour validity
+      expiresAt: Date.now() + (3600 * 1000),
     });
 
   } catch (err) {
@@ -182,11 +177,11 @@ httpsServer.listen(HTTP_PORT, () => {
 
 
 // ======================================================================
-// 2. INSTRUCTOR EVENT WEBSOCKET SERVER (Your original wss logic)
+// 2. INSTRUCTOR EVENT WEBSOCKET SERVER (Original Logic + Fix)
 // ======================================================================
 const wss = new WebSocketServer({ 
     server: httpsServer,
-    path: '/' // Default path for existing connections
+    path: '/' 
 });
 
 console.log(`Instructor Event WS server running on ${process.env.WSURL}:${WS_PORT}`);
@@ -194,11 +189,17 @@ console.log(`Instructor Event WS server running on ${process.env.WSURL}:${WS_POR
 // Session clean-up utility
 async function delSessionDoc(sessionID) {
   try {
+    // Ensure sessionID is a clean string before creating document path
+    if (typeof sessionID !== 'string' || sessionID.length === 0) {
+      console.error("ERROR: Invalid sessionId provided to delSessionDoc:", sessionID);
+      return;
+    }
+
     const sessionRef = db.collection("sessions").doc(sessionID);
     const sessionSnap = await sessionRef.get();
 
     if (!sessionSnap.exists) {
-      console.log("Session does not exist");
+      console.log(`Session ${sessionID} does not exist`);
       return;
     }
 
@@ -222,7 +223,7 @@ async function delSessionDoc(sessionID) {
     batch.delete(sessionRef);
 
     await batch.commit();
-    console.log("Session deleted cleanly");
+    console.log(`Session ${sessionID} deleted cleanly`);
 
   } catch (err) {
     console.error("ERROR deleting session:", err);
@@ -232,12 +233,17 @@ async function delSessionDoc(sessionID) {
 
 // on client connection (Instructor/Trainee Events)
 wss.on("connection", (ws, req) => {
-    const { sessionId } = url.parse(req.url, true).query;
+    const query = url.parse(req.url, true).query;
+    // ⚠️ FIX: Ensure we use the clean, parsed sessionId string
+    const sessionId = query.sessionId; 
 
     if (!sessionId) {
         ws.send("Missing sessionId");
         return ws.close();
     }
+    
+    // Store the clean ID on the WebSocket object for reliable cleanup
+    ws.sessionId = sessionId; 
 
     if(!sessions[sessionId]) sessions[sessionId] = [];
     
@@ -273,14 +279,19 @@ wss.on("connection", (ws, req) => {
     });
 
   ws.on("close", () => {
-    console.log(`EVENTS WS client disconnected: ${sessionId}`)
-    if(sessions[sessionId]){
-        sessions[sessionId] = sessions[sessionId].filter(client => client !== ws);
+    // ⚠️ FIX: Use the clean ID stored on the WebSocket object
+    const cleanSessionId = ws.sessionId; 
+    
+    console.log(`EVENTS WS client disconnected: ${cleanSessionId}`);
+
+    if(sessions[cleanSessionId]){
+        sessions[cleanSessionId] = sessions[cleanSessionId].filter(client => client !== ws);
         
-        if(sessions[sessionId].length === 0){
-            delete sessions[sessionId];
-            delSessionDoc(sessionId);
-            console.log("Session deleted due to no clients:", sessionId);
+        if(sessions[cleanSessionId].length === 0){
+            delete sessions[cleanSessionId];
+            // Pass the clean string to the delete function
+            delSessionDoc(cleanSessionId); 
+            console.log("Session deleted due to no clients:", cleanSessionId);
         }
     }
   });
@@ -312,11 +323,11 @@ wssGemini.on("connection", (ws, req) => {
     // Initialize the session state for the AI
     AI_SESSIONS[ephemeralKey] = {
         ws: ws,
-        history: [], // Conversation history for the LLM
+        history: [], 
         systemInstruction: "",
-        currentAudioBuffer: Buffer.from([]), // Buffer for incoming audio (STT)
+        currentAudioBuffer: Buffer.from([]), 
         ttsVoice: "",
-        turnInProgress: false // Flag to prevent concurrent LLM calls
+        turnInProgress: false 
     };
 
     ws.on("message", async (msg) => {
@@ -324,7 +335,6 @@ wssGemini.on("connection", (ws, req) => {
 
         // 1. Handle Binary Audio Data (Int16 PCM from client)
         if (typeof msg !== 'string') {
-            // Buffer audio for STT or VAD
             session.currentAudioBuffer = Buffer.concat([session.currentAudioBuffer, msg]);
             return;
         }
@@ -339,11 +349,9 @@ wssGemini.on("connection", (ws, req) => {
                 session.history.push({ role: "system", parts: [{ text: session.systemInstruction }] });
 
             } else if (jsonMSG.type === "user_message") {
-                // Add user message to history
                 session.history.push({ role: "user", parts: [{ text: jsonMSG.content }] });
                 
             } else if (jsonMSG.type === "end_of_turn" || jsonMSG.type === "generate_audio_response") {
-                // Trigger STT (missing) and LLM processing
                 if (!session.turnInProgress) {
                     await processUserTurn(ephemeralKey);
                 }
@@ -369,18 +377,12 @@ async function processUserTurn(ephemeralKey) {
     const session = AI_SESSIONS[ephemeralKey];
     if (!session || session.history.length === 0 || session.turnInProgress) return;
 
-    session.turnInProgress = true; // Lock the turn
+    session.turnInProgress = true; 
 
     try {
         // 1. Determine the Model (Hybrid Logic)
         const modelName = ACTIVE_MODELS[ephemeralKey] || FLASH_GEMINI_MODEL;
         console.log(`Processing turn using model: ${modelName}`);
-
-        // --- MISSING STT LOGIC:
-        // Here, you would call your Speech-to-Text service using session.currentAudioBuffer
-        // and add the resulting text to session.history. 
-        // session.currentAudioBuffer = Buffer.from([]); // Clear the buffer
-        // ---
 
         // 2. Call Gemini
         const response = await ai.chats.create({
@@ -400,19 +402,12 @@ async function processUserTurn(ephemeralKey) {
         session.ws.send(JSON.stringify({ type: "ai_text_response", text: aiText, role: "assistant" }));
 
         // 4. Synthesize and Stream Audio (Placeholder)
-        // **This part needs a dedicated TTS service (like Google Cloud TTS) implementation.**
-        // The audio output must be encoded (e.g., base64 MP3/OGG) and streamed back.
-        
         console.log(`[TTS Placeholder] Synthesizing audio for: "${aiText.substring(0, 50)}..."`);
-        
-        // Example for placeholder streaming:
-        // session.ws.send(JSON.stringify({ type: "ai_audio_chunk", audio: "base64_audio_chunk_1" }));
-        // session.ws.send(JSON.stringify({ type: "ai_audio_chunk", audio: "base64_audio_chunk_2" }));
         
     } catch (err) {
         console.error("Gemini LLM Call Error:", err);
         session.ws.send(JSON.stringify({ type: "error", message: "AI processing failed." }));
     } finally {
-        session.turnInProgress = false; // Unlock the turn
+        session.turnInProgress = false; 
     }
 }
