@@ -105,9 +105,11 @@ async function setActive(sessionId) {
   const batch = db.batch();
   try{  
     batch.update(sessionRef, {
-      active: true
+      active: true,
+      start: new Date()
     });
     await batch.commit();
+    console.log("Session active");
   } catch(error){
     console.log(error);
   }
