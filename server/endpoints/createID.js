@@ -30,7 +30,7 @@ router.get("/test", (req, res) => res.send("working"));
 // -----------------------
 router.post("/create", async (req, res) => {
 try {
-    const id = randomBytes(4).toString("hex");
+    const id = randomBytes(3).toString("hex");
     console.log("Creating session:", id);
 
     const sessionRef = db.collection("sessions").doc(id);
