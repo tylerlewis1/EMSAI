@@ -57,6 +57,9 @@ wss.on("connection", (ws, req) => {
         console.log("WS received:", msg.toString());
         // For now just echo. Later this will route vitals, interventions, etc.
         var jsonMSG = JSON.parse(msg);
+        if(jsonMSG.type == "crew.join"){
+          setActive(sessionId);
+        }
         if(jsonMSG.type === "session.end"){
             //close all connections in the session
             for(var i = 0; i < sessions[sessionId].length; i++){
@@ -96,6 +99,18 @@ wss.on("connection", (ws, req) => {
     }
 });
 });
+async function setActive(sessionID) {
+  const sessionRef = db.collection("sessions").doc(sessionId);
+  const batch = db.batch();
+  try{  
+    batch.update(sessionRef, {
+      active: true
+    });
+    await batch.commit();
+  } catch(error){
+    console.log(error);
+  }
+}
 async function delSessionDoc(sessionID) {
   try {
     const sessionRef = db.collection("sessions").doc(sessionID);
