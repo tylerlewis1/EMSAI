@@ -56,10 +56,11 @@ wss.on("connection", (ws, req) => {
     ws.on("message", (msg) => {
         console.log("WS received:", msg.toString());
         // For now just echo. Later this will route vitals, interventions, etc.
-        var jsonMSG = JSON.parse(msg);
-        if(jsonMSG.type == "crew.join"){
+        if(msg == "crew.join"){
           setActive(sessionId);
+          return;
         }
+        var jsonMSG = JSON.parse(msg);
         if(jsonMSG.type === "session.end"){
             //close all connections in the session
             for(var i = 0; i < sessions[sessionId].length; i++){
