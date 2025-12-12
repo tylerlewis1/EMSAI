@@ -106,7 +106,8 @@ async function setActive(sessionId) {
   try{  
     batch.update(sessionRef, {
       active: true,
-      start: new Date()
+      start: new Date(),
+      actionlog: []
     });
     await batch.commit();
     console.log("Session active");
