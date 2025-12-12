@@ -100,7 +100,7 @@ wss.on("connection", (ws, req) => {
     }
 });
 });
-async function setActive(sessionID) {
+async function setActive(sessionId) {
   const sessionRef = db.collection("sessions").doc(sessionId);
   const batch = db.batch();
   try{  
