@@ -229,20 +229,73 @@ router.post("/report", async (req, res) => {
         });
         console.log(response.choices[0].message.content);
         const pdf = new jsPDF();
-        pdf.text(`GPTEMS Evaluation Report`, 10, 10);
+        let yPos = 10;
+
+        // Title
+        pdf.setFontSize(16);
+        pdf.text(`GPTEMS Evaluation Report`, 10, yPos);
+        yPos += 15;
+
+        // Date/Time
         pdf.setFontSize(10);
-        pdf.text(`Scenario:`, 10, 85);
-        const scenarioText = pdf.splitTextToSize(`You are being requested for a ${doc.data().Age} year old, with ${doc.data().issue}. They are acting ${doc.data().Behavior || "normal"} at ${doc.data().start?.toDate().toLocaleTimeString()}`, 180);
-        pdf.text(scenarioText, 10, 95);
+        pdf.text(`Generated: ${new Date().toLocaleString()}`, 10, yPos);
+        yPos += 15;
 
-        pdf.text(`Event Log:`, 10, 85);
-        doc.data().actionlog.forEach((event, index) => {
-            pdf.text(`  ${event.time}: ${event.name}`, 10, 55 + (index * 10));
-        });
-        pdf.text(`AI Evaluation:`, 10, 85);
-        const splitText = pdf.splitTextToSize(response.choices[0].message.content, 180);
-        pdf.text(splitText, 10, 95);
+        // Scenario Section
+        pdf.setFontSize(12);
+        pdf.text(`Scenario:`, 10, yPos);
+        yPos += 10;
 
+        pdf.setFontSize(10);
+        const scenarioText = `You are being requested for a ${doc.data().Age} year old, with ${doc.data().issue}. They are acting ${doc.data().Behavior || "normal"} at ${doc.data().start?.toDate().toLocaleTimeString()}`;
+        const splitScenario = pdf.splitTextToSize(scenarioText, 180);
+        pdf.text(splitScenario, 10, yPos);
+        yPos += (splitScenario.length * 7) + 10; // Adjust based on line height (7) + spacing
+
+        // Event Log Section
+        pdf.setFontSize(12);
+        pdf.text(`Event Log:`, 10, yPos);
+        yPos += 10;
+
+        pdf.setFontSize(10);
+        if (doc.data().actionlog && doc.data().actionlog.length > 0) {
+            doc.data().actionlog.forEach((event, index) => {
+                const timeStr = event.time?.toDate ? event.time.toDate().toLocaleTimeString() : event.time || 'N/A';
+                pdf.text(`${timeStr}: ${event.name}`, 10, yPos);
+                yPos += 7; // Line height for log entries
+            });
+            yPos += 5; // Extra spacing after log
+        } else {
+            pdf.text('No events logged', 10, yPos);
+            yPos += 12;
+        }
+
+        // AI Evaluation Section
+        pdf.setFontSize(12);
+        pdf.text(`AI Evaluation:`, 10, yPos);
+        yPos += 10;
+
+        pdf.setFontSize(10);
+        const aiResponse = response.choices[0].message.content;
+        const splitAI = pdf.splitTextToSize(aiResponse, 180);
+        pdf.text(splitAI, 10, yPos);
+        yPos += (splitAI.length * 7);
+
+        // Optional: Check if we need a new page
+        if (yPos > 280) { // Near bottom of A4 page (approx 297mm)
+            pdf.addPage();
+            yPos = 10;
+        }
+
+        // Optional: Add a footer on each page
+        const pageCount = pdf.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            pdf.setPage(i);
+            pdf.setFontSize(8);
+            pdf.text(`Page ${i} of ${pageCount}`, 180, 290);
+        }
+
+        // Generate and send PDF
         const pdfBuffer = pdf.output('arraybuffer');
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
