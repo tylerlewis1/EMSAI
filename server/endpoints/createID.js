@@ -6,6 +6,7 @@ import { randomBytes } from "crypto";
 import admin from "firebase-admin";
 import { db } from "../firebaseadmin.js";
 import Crypto from 'crypto-js';
+import { jsPDF } from "jspdf";
 import OpenAI from "openai"
 const router = express.Router();
 
@@ -224,10 +225,13 @@ router.post("/report", async (req, res) => {
                 "content": msg
             },
             ],
-            max_tokens: 100,
+            max_tokens: 150,
         });
         console.log(response.choices[0].message.content);
-
+        const pdf = new jsPDF();
+        pdf.text(`AI eval: ${response.choices[0].message.content}`, 10, 10);
+        await doc.save("report.pdf");
+        res.sendFile("./report.pdf")
     }catch(e){
         console.log(e);
     }
