@@ -229,7 +229,20 @@ router.post("/report", async (req, res) => {
         });
         console.log(response.choices[0].message.content);
         const pdf = new jsPDF();
-        pdf.text(`AI eval: ${response.choices[0].message.content}`, 10, 10);
+        pdf.text(`GPTEMS Evaluation Report`, 10, 10);
+        pdf.setFontSize(10);
+        pdf.text(`Scenario:`, 10, 85);
+        const scenarioText = pdf.splitTextToSize(`You are being requested for a ${doc.data().Age} year old, with ${doc.data().issue}. They are acting ${doc.data().Behavior || "normal"} at ${doc.data().start?.toDate().toLocaleTimeString()}`, 180);
+        pdf.text(scenarioText, 10, 95);
+
+        pdf.text(`Event Log:`, 10, 85);
+        doc.data().actionlog.forEach((event, index) => {
+            pdf.text(`  ${event.time}: ${event.name}`, 10, 55 + (index * 10));
+        });
+        pdf.text(`AI Evaluation:`, 10, 85);
+        const splitText = pdf.splitTextToSize(aiResponse, 180);
+        pdf.text(splitText, 10, 95);
+
         const pdfBuffer = pdf.output('arraybuffer');
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
