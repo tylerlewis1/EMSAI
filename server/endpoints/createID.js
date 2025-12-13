@@ -211,7 +211,9 @@ router.post("/report", async (req, res) => {
                 Disbatched: ${doc.data().start?.toDate().toLocaleTimeString()} to a ${doc.data().Age} y/o 
                 CC: ${doc.data().Issue}
                 Behavior: ${doc.data().Behavior || "normal"}
-                log: ${doc.data().actionlog}
+                log: ${doc.data().actionlog.map((event) =>{
+                    return(`${event.time} ${event.name},`)
+                })}
                 `.trim()
         console.log(msg);
         const response = await openai.chat.completions.create({
