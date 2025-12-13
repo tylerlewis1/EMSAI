@@ -6,6 +6,7 @@ import { randomBytes } from "crypto";
 import admin from "firebase-admin";
 import { db } from "../firebaseadmin.js";
 import Crypto from 'crypto-js';
+import OpenAI from "openai"
 const router = express.Router();
 
 // Enable CORS
@@ -185,6 +186,45 @@ router.post("/realtime/webrtc", async (req, res) => {
         res.status(500).json({ error: "Proxy WebRTC failed" });
     }
 });
+router.post("/report", async (req, res) => {
+    try{
+        const {eventlog, uid} = req.body;
+        const docRef = db.collection("users").doc(uid);
+        const doc = await docRef.get();
+        let KEY = null;
+        if(doc.data().key){
+            var decrypted = Crypto.AES.decrypt(key, uid).toString(Crypto.enc.Utf8);
+            KEY = `Bearer ${decrypted}`;
+        } else{
+            KEY = `Bearer ${process.env.OPENAIKEY}`;
+        } 
+            
+        const openai = new OpenAI({
+            apiKey: KEY,
+        });
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+            {
+                "role": "system", 
+                "content": `Based on this call log grade this ${doc.data().level} student give me the good and the bad. 
+                This is only a event log recorded by a ai system you will only get vitlas, interventions and instructor commands.
+                Output only the feedback. 
+                At the end grade it out of 100 keep it short and sweet 
+                Disbatched: ${doc.data().start?.toDate().toLocaleTimeString()} to a ${doc.data().Age} y/o 
+                CC: ${doc.data().Issue}
+                Behavior: ${doc.data().Behavior || "normal"}
+                log: ${doc.data().actionlog}
+                `.trim()
+            },
+            ],
+            max_tokens: 100,
+        });
+        console.log(response.choices[0].message.content);
 
+    }catch(e){
+        console.log(e);
+    }
+});
 
 export default router;
