@@ -61,31 +61,31 @@ wss.on("connection", (ws, req) => {
           return;
         }
         var jsonMSG = JSON.parse(msg);
-        if(jsonMSG.type === "session.end"){
-            //close all connections in the session
-            for(var i = 0; i < sessions[sessionId].length; i++){
-                    const client = sessions[sessionId][i];
-                    client.send("Session ended by admin");
-                    client.close();
-                    delete sessions[sessionId];
-                    delSessionDoc(sessionId);
-                    console.log("Session ended:", sessionId);
-                    return;
-            }
-            //delete the session
-        }
         for(var i = 0; i < sessions[sessionId].length; i++){
-            const client = sessions[sessionId][i];
-            if(client !== ws){
-                //forward message to other clients in the same session
-                client.send(msg.toString());
-            } else if (client == ws){
-                //acknowledge message receipt to sender
-                ws.send("message received");
-            }
+          const client = sessions[sessionId][i];
+          if(client !== ws){
+            //forward message to other clients in the same session
+            client.send(msg.toString());
+          } else if (client == ws){
+            //acknowledge message receipt to sender
+            ws.send("message received");
+          }
         }
-    });
-
+      });
+      if(jsonMSG.type === "session.end"){
+          //close all connections in the session
+          for(var i = 0; i < sessions[sessionId].length; i++){
+                  const client = sessions[sessionId][i];
+                  client.send("Session ended by admin");
+                  client.close();
+                  delete sessions[sessionId];
+                  delSessionDoc(sessionId);
+                  console.log("Session ended:", sessionId);
+                  return;
+          }
+          //delete the session
+      }
+      
   ws.on("close", () => {
     console.log(`WS client disconnected: ${sessionId}`)
     if(sessions[sessionId]){

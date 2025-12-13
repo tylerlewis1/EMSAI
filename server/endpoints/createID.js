@@ -216,7 +216,6 @@ router.post("/report", async (req, res) => {
                     return(`${event.time} ${event.name},`)
                 })}
                 `.trim()
-        console.log(msg);
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [
@@ -227,7 +226,6 @@ router.post("/report", async (req, res) => {
             ],
             max_tokens: 150,
         });
-        console.log(response.choices[0].message.content);
         const pdf = new jsPDF();
         let yPos = 10;
 
