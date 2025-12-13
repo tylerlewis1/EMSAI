@@ -188,12 +188,14 @@ router.post("/realtime/webrtc", async (req, res) => {
 });
 router.post("/report", async (req, res) => {
     try{
-        const {uid} = req.body;
-        const docRef = db.collection("users").doc(uid);
+        const {uid, sid} = req.body;
+        const userRef = db.collection("users").doc(uid);
+        const docRef = db.collection("sessions").doc(sid);
         const doc = await docRef.get();
+        const userDoc = await userRef.get();
         let KEY = null;
-        if(doc.data().key){
-            var decrypted = Crypto.AES.decrypt(doc.data().key, uid).toString(Crypto.enc.Utf8);
+        if(userDoc.data().key){
+            var decrypted = Crypto.AES.decrypt(userDoc.data().key, uid).toString(Crypto.enc.Utf8);
             KEY = decrypted;
         } else{
             KEY = process.env.OPENAIKEY;
