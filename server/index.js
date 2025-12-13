@@ -71,7 +71,6 @@ wss.on("connection", (ws, req) => {
             ws.send("message received");
           }
         }
-      });
       if(jsonMSG.type === "session.end"){
           //close all connections in the session
           for(var i = 0; i < sessions[sessionId].length; i++){
@@ -85,7 +84,7 @@ wss.on("connection", (ws, req) => {
           }
           //delete the session
       }
-      
+      });
   ws.on("close", () => {
     console.log(`WS client disconnected: ${sessionId}`)
     if(sessions[sessionId]){
