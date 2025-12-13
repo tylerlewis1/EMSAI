@@ -202,12 +202,7 @@ router.post("/report", async (req, res) => {
         const openai = new OpenAI({
             apiKey: KEY,
         });
-        const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-            {
-                "role": "system", 
-                "content": `Based on this call log grade this ${doc.data().level} student give me the good and the bad. 
+        const msg = `Based on this call log grade this ${doc.data().level} student give me the good and the bad. 
                 This is only a event log recorded by a ai system you will only get vitlas, interventions and instructor commands.
                 Output only the feedback. 
                 At the end grade it out of 100 keep it short and sweet 
@@ -216,6 +211,13 @@ router.post("/report", async (req, res) => {
                 Behavior: ${doc.data().Behavior || "normal"}
                 log: ${doc.data().actionlog}
                 `.trim()
+        console.log(msg);
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+            {
+                "role": "system", 
+                "content": msg
             },
             ],
             max_tokens: 100,
