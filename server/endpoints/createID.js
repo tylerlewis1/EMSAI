@@ -230,8 +230,10 @@ router.post("/report", async (req, res) => {
         console.log(response.choices[0].message.content);
         const pdf = new jsPDF();
         pdf.text(`AI eval: ${response.choices[0].message.content}`, 10, 10);
-        await pdf.save("report.pdf");
-        res.sendFile("./report.pdf", { root: __dirname });
+        const pdfBuffer = pdf.output('arraybuffer');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
+        res.send(Buffer.from(pdfBuffer));
     }catch(e){
         console.log(e);
     }
