@@ -194,9 +194,9 @@ router.post("/report", async (req, res) => {
         let KEY = null;
         if(doc.data().key){
             var decrypted = Crypto.AES.decrypt(doc.data().key, uid).toString(Crypto.enc.Utf8);
-            KEY = `Bearer ${decrypted}`;
+            KEY = decrypted;
         } else{
-            KEY = `Bearer ${process.env.OPENAIKEY}`;
+            KEY = process.env.OPENAIKEY;
         } 
             
         const openai = new OpenAI({
