@@ -152,7 +152,7 @@ router.post("/realtime/webrtc", async (req, res) => {
        KEY = `Bearer ${decrypted}`;
        console.log("BYOK");
     }else{
-        KEY = `Bearer ${key}` || `Bearer ${process.env.OPENAIKEY}`;
+        KEY = `Bearer ${process.env.OPENAIKEY}`;
     }
     if (!offer || !ephemeralKey)
         return res.status(400).json({ error: "Missing offer or ephemeral key" });
