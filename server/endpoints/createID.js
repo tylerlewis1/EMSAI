@@ -145,11 +145,12 @@ router.post("/realtime/webrtc", async (req, res) => {
     const MODEL_NAME = model || MINI_REALTIME_MODEL;
     const docRef = db.collection("users").doc(uid);
     const doc = await docRef.get();
-    const KEY = null; 
+    let KEY = null; 
     let key = doc.data().key;
     if(key){
        var decrypted = Crypto.AES.decrypt(key, uid).toString(Crypto.enc.Utf8);
        KEY = `Bearer ${decrypted}`;
+       console.log("BYOK");
     }else{
         KEY = `Bearer ${key}` || `Bearer ${process.env.OPENAIKEY}`;
     }
