@@ -5,13 +5,14 @@ import fetch from "node-fetch";
 import { randomBytes } from "crypto";
 import admin from "firebase-admin";
 import { db } from "../firebaseadmin.js";
+import Crypto from 'crypto-js';
 const router = express.Router();
 
 // Enable CORS
 router.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type", "Authorization", "OpenAI-Beta"]
+ origin: "*",
+ methods: ["GET", "POST"],
+ allowedHeaders: ["Content-Type", "Authorization", "OpenAI-Beta"]
 }));
 
 router.use(bodyParser.json());
@@ -139,10 +140,19 @@ try {
 // -----------------------
 router.post("/realtime/webrtc", async (req, res) => {
     try {
-    const { offer, ephemeralKey, model } = req.body;
+    const { offer, ephemeralKey, model, uid} = req.body;
      // Use model from client request, or default to MINI
     const MODEL_NAME = model || MINI_REALTIME_MODEL;
-
+    const docRef = db.collection("users").doc(uid);
+    const doc = await docRef.get();
+    const KEY = null; 
+    let key = doc.data().key;
+    if(key){
+       var decrypted = Crypto.AES.decrypt(key, uid).toString(Crypto.enc.Utf8);
+       KEY = `Bearer ${decrypted}`;
+    }else{
+        KEY = `Bearer ${key}` || `Bearer ${process.env.OPENAIKEY}`;
+    }
     if (!offer || !ephemeralKey)
         return res.status(400).json({ error: "Missing offer or ephemeral key" });
 
@@ -152,7 +162,7 @@ router.post("/realtime/webrtc", async (req, res) => {
       {
         method: "POST",
         headers: {
-        "Authorization": `Bearer ${process.env.OPENAIKEY}`,
+        "Authorization": KEY,
         "OpenAI-Session": ephemeralKey,
         "Content-Type": "application/sdp",
         "OpenAI-Beta": "realtime=v1",
