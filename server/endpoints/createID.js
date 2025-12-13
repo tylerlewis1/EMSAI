@@ -240,7 +240,7 @@ router.post("/report", async (req, res) => {
             pdf.text(`  ${event.time}: ${event.name}`, 10, 55 + (index * 10));
         });
         pdf.text(`AI Evaluation:`, 10, 85);
-        const splitText = pdf.splitTextToSize(aiResponse, 180);
+        const splitText = pdf.splitTextToSize(response.choices[0].message.content, 180);
         pdf.text(splitText, 10, 95);
 
         const pdfBuffer = pdf.output('arraybuffer');
