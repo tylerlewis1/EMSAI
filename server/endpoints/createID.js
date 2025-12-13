@@ -188,12 +188,12 @@ router.post("/realtime/webrtc", async (req, res) => {
 });
 router.post("/report", async (req, res) => {
     try{
-        const {eventlog, uid} = req.body;
+        const {uid} = req.body;
         const docRef = db.collection("users").doc(uid);
         const doc = await docRef.get();
         let KEY = null;
         if(doc.data().key){
-            var decrypted = Crypto.AES.decrypt(key, uid).toString(Crypto.enc.Utf8);
+            var decrypted = Crypto.AES.decrypt(doc.data().key, uid).toString(Crypto.enc.Utf8);
             KEY = `Bearer ${decrypted}`;
         } else{
             KEY = `Bearer ${process.env.OPENAIKEY}`;
