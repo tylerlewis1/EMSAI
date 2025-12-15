@@ -205,7 +205,7 @@ router.post("/report", async (req, res) => {
         const openai = new OpenAI({
             apiKey: KEY,
         });
-        const msg = `Based on this call log grade this ${doc.data().level} student give me the good and the bad. 
+        const msg = `Based on this call log grade this ${doc.data().level} student give me the good and the bad. Did they do everything they could for their scope of practice based on the NREMT? 
                 This is only a event log recorded by a ai system you will only get vitlas, interventions and instructor commands.
                 Output only the feedback. 
                 At the end grade it out of 100 keep it short and sweet 
@@ -224,7 +224,7 @@ router.post("/report", async (req, res) => {
                 "content": msg
             },
             ],
-            max_tokens: 150,
+            max_tokens: 200,
         });
         const pdf = new jsPDF();
         let yPos = 10;
