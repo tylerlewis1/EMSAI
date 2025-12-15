@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { db } from "../firebase.js";
-import { getDoc, doc } from "firebase/firestore";
-import { useNavigate, useLocation  } from "react-router-dom";
+import { db, auth } from "../firebase.js";
+import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { useNavigate, useLocation, data  } from "react-router-dom";
 import "../css/instructor.css"; // SCOPED USING .instructor-page WRAPPER
-
+import ActionLog from "../comps/ActionLog.jsx";
 export default function Instructor() {
   const location = useLocation();
   const { ID } = location.state || "";
@@ -12,6 +12,7 @@ export default function Instructor() {
   const [intervention, setIntervention] = useState("");
   const [sessionData, setSessionData] = useState(null);
   const [dose, setDose] = useState(null);
+ 
   const navigate = useNavigate();
   const wsRef = useRef(null);
 
@@ -47,7 +48,21 @@ export default function Instructor() {
       alert("Session not found!");
     }
   };
+  //update log
 
+  const addToLog = async(data) =>{
+    try{
+      const sessionRef = doc(db, "sessions", sessionId);
+      await updateDoc(sessionRef, {
+        actionlog: arrayUnion({
+          name: data,
+          time: new Date()
+        })
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
   // --------------------------
   // SEND: VITALS UPDATE
   // --------------------------
@@ -69,7 +84,7 @@ export default function Instructor() {
         },
       })
     );
-
+    addToLog(`Vitals: HR: ${sessionData.HR}, BP: ${sessionData.BPS + "/" + sessionData.BPD}, RR: ${sessionData.RR}, SPO2: ${sessionData.SPO2}, BGL: ${sessionData.BGL}`);
     console.log("Vitals Pushed");
   };
 
@@ -86,6 +101,7 @@ export default function Instructor() {
         data: { name: intervention + (dose ? ` — ${dose}` : "") },
       })
     );
+    addToLog(`Intervention: ${intervention} ${dose}`);
     setDose("");
     setIntervention("");
     console.log("Intervention sent");
@@ -107,6 +123,7 @@ export default function Instructor() {
       })
     );
     setMessage("");
+    addToLog(`Command: ${message}`);
     console.log("Behavior suggestion sent");
   };
   //nudge
@@ -119,18 +136,35 @@ export default function Instructor() {
         type: "ai.talk",
       })
     );
+    addToLog(`Nudged`);
     console.log("nudged");
   };
+
+  //report
+  const report = async() =>{
+    const resp = await fetch("https://server.gptems.com:8081/report", {
+        method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              uid: auth.currentUser.uid,
+              sid: sessionId
+            })
+        });
+      const pdfBlob = await resp.blob();
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      window.open(pdfUrl, '_blank');
+
+  }
   // --------------------------
   // END SESSION
   // --------------------------
-  const endSession = () => {
+  const endSession = async() => {
     const ws = wsRef.current;
-    if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-    ws.send(JSON.stringify({ type: "session.end" }));
-
-    console.log("Session ended");
+    await report().then(() =>{
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      ws.send(JSON.stringify({ type: "session.end" }));
+      console.log("Session ended");
+    });
   };
 
   return (
@@ -179,13 +213,15 @@ export default function Instructor() {
               ))}
               <select value={sessionData.EKG} onChange={(e) =>{setSessionData({...sessionData, EKG: e.target.value})}}>
                 <option value="normal">Normal Sinus Rhythm</option>
-                <option value="afib">Atrial Fibrillation</option>
+                {/* <option value="afib">Atrial Fibrillation</option> */}
                 <option value="pvc">Premature Ventricular Contractions</option>
                 <option value="vtach">Ventricular Tachycardia</option>
                 <option value="vfib">Ventricular Fibrillation</option>
                 <option value="asystole">Asystole</option>
                 <option value="svt">Supraventricular Tachycardia</option>
                 <option value="brady">Bradycardia</option>
+                <option value="pollymorphic">Polymorphic Tachycardia</option>
+                <option value="junctional">Junctional</option>
               </select>
               <button className="btn-green" onClick={updateVitals}>
                 Push Vitals Update
@@ -347,6 +383,7 @@ export default function Instructor() {
               <button className="btn-yellow" onClick={sendIntervention}>
                 Administer Intervention
               </button>
+              <ActionLog sessionID={{sessionId}}/>
             </div>
 
             {/* BEHAVIOR COMMAND */}
@@ -365,7 +402,6 @@ export default function Instructor() {
               <button className="btn-blue" onClick={nudge}>
                 Nudge
               </button>
-
               <button className="btn-red" onClick={endSession}>
                 End Session
               </button>

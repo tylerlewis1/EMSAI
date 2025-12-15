@@ -102,6 +102,7 @@
   background: #1e293b;
   padding: 20px;
   border-radius: 14px;
+  height: 85vh;
 }
 
 /* ===========================
@@ -181,4 +182,26 @@
     padding: 14px;
     font-size: 1.1rem;
   }
+}
+.actionLog{
+  background-color: #111827;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  height: 60vh;
+}
+.action{
+  display: block;
+  background-color: #64748b;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+}
+.action * {
+  display: inline;
+  padding: 10px;
+}
+.actions{
+  height: 50vh;
+  overflow-y: scroll;
 }

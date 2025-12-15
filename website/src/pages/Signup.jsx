@@ -10,8 +10,9 @@ export default function Siginup() {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [name, setName] = useState("");
+    const [checked, setChecked] = useState(false);
     const handleSignup = async(e) => {
-        e.preventDefault();
+      e.preventDefault();
         try{        
             createUserWithEmailAndPassword(auth, email, password) .then((userCredential) => {
                 const userdocRef = doc(db, "users", auth.currentUser.uid)
@@ -20,9 +21,10 @@ export default function Siginup() {
                     Phone: phone,
                     Credits: 25,
                     Sessions: [],
+                    TOSAKNOLAGED: new Date()
                 });
                 console.log(auth.currentUser.uid);
-                nav("/dash");
+                nav("/checkout");
             });
         }catch(e){
             alert("There was a error");
@@ -40,6 +42,7 @@ export default function Siginup() {
           style={styles.input}
           onChange={(e) => setName(e.target.value)}
           value={name}
+          required="true"
           type="text"
           placeholder="Name"
         />
@@ -47,6 +50,7 @@ export default function Siginup() {
           style={styles.input}
           onChange={(e) => setPhone(e.target.value)}
           value={phone}
+          required="true"
           type="tel"
           placeholder="Phone Number"
         />
@@ -54,6 +58,7 @@ export default function Siginup() {
           style={styles.input}
           onChange={(e) => setEmail(e.target.value)}
           value={email}
+          required="true"
           type="email"
           placeholder="Email Address"
         />
@@ -62,9 +67,18 @@ export default function Siginup() {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           type="password"
+          required="true"
           placeholder="Password"
         />
-
+        <div style={{display: "inline"}}>
+        <input type="checkbox" value={checked} onChange={(e) => setChecked(e.target.value)} required="true"/>
+        <label>I have read and agree to the Terms of services. <a style={{color: "red"}} href="/tos">READ HERE</a></label>
+        </div>
+        <div style={{display: "inline"}}>
+        <input type="checkbox" value={checked} onChange={(e) => setChecked(e.target.value)} required="true"/>
+        <label>I have read and agree to the Privacy Policy. <a style={{color: "red"}} href="/PrivacyPolicy">READ HERE</a></label>
+        </div>
+        
         <button style={styles.button} type="submit">
           Sign Up
         </button>

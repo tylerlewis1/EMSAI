@@ -21,7 +21,8 @@ export default function Create() {
     const onClose = () =>{
         setIsOpen(false);
     }
-    const CreateSession = async () => {
+    const CreateSession = async (event) => {
+        event.preventDefault();
         setIsLoading(true);
         try {
             const res = await fetch(url, {
@@ -29,7 +30,6 @@ export default function Create() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     Name: name,
-                    Gender: null,
                     Age: age,
                     Issue: issue,
                     Other: other,
@@ -41,7 +41,7 @@ export default function Create() {
                     Medications: medications,
                     Allergies: allergies,
                     Wants: wants,
-                    UserUID: auth.currentUser.uid
+                    UserUID: auth.currentUser.uid,
                 })
             });
 
@@ -88,9 +88,9 @@ export default function Create() {
                     <button className="modal-close" onClick={handleClose}>×</button>
                 </div>
 
-                <section className="create-form">
+                <form className="create-form" onSubmit={(event) => CreateSession(event)} > 
                     <div className="form-grid">
-                        <input type="text" placeholder="Patient Name" value={name || ""} onChange={(e) => setName(e.target.value)} />
+                        <input t required="true" ype="text" placeholder="Patient Name" value={name || ""} onChange={(e) => setName(e.target.value)} />
                         <input type="text" placeholder="Age" value={age || ""} onChange={(e) => setAge(e.target.value)} />
                         <input type="text" placeholder="Chief Complaint" value={issue || ""} onChange={(e) => setIssue(e.target.value)} />
                         <input type="text" placeholder="Other Info" value={other || ""} onChange={(e) => setOther(e.target.value)} />
@@ -121,7 +121,7 @@ export default function Create() {
 
                     <div className="modal-actions">
                         <button 
-                            onClick={CreateSession} 
+                            type="submit"
                             disabled={isLoading}
                             className="create-button"
                         >
@@ -134,7 +134,7 @@ export default function Create() {
                             <h3>Session Created: {sessionID}</h3>
                         </div>
                     )}
-                </section>
+                </form>
             </div>
         </div>
     );

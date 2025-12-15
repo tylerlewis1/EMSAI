@@ -117,7 +117,7 @@
 
 /* Optional: Add session ID format hint */
 .signinfrom::after {
-  content: 'Enter the 12-character session ID';
+  content: 'Enter the 6-character session ID';
   display: block;
   font-size: 0.875rem;
   color: #6b7280;
