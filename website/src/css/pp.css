@@ -1,0 +1,369 @@
+
+
+/* Privacy Policy Styles */
+.privacy-policy {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.privacy-content {
+  padding: 120px 0 60px;
+  background: white;
+}
+
+.privacy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.privacy-header h1 {
+  font-size: 3rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.last-updated {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.privacy-body {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.privacy-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.privacy-section:last-of-type {
+  border-bottom: none;
+}
+
+.privacy-section h2 {
+  font-size: 1.75rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+}
+
+.privacy-section h3 {
+  font-size: 1.25rem;
+  color: #374151;
+  margin: 1.5rem 0 1rem;
+}
+
+.privacy-section p {
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.privacy-section ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.privacy-section li {
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+.privacy-section li strong {
+  color: #374151;
+}
+
+
+
+.contact-info p {
+  margin-bottom: 0.75rem;
+}
+
+.contact-info strong {
+  color: #1f2937;
+}
+
+.privacy-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e5e7eb;
+  text-align: center;
+  font-style: italic;
+  color: #6b7280;
+}
+
+/* Responsive Design for Privacy Policy */
+@media (max-width: 768px) {
+  .privacy-content {
+    padding: 100px 0 40px;
+  }
+
+  .privacy-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .privacy-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .privacy-section h3 {
+    font-size: 1.125rem;
+  }
+
+  .privacy-body {
+    padding: 0 1rem;
+  }
+}
+/* Terms of Service Styles */
+.terms-of-service {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.terms-content {
+  padding: 120px 0 60px;
+  background: white;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.terms-header h1 {
+  font-size: 3rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.last-updated {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.warning-banner {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 1rem;
+  display: inline-block;
+}
+
+.legal-notice {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 2rem 0 3rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.terms-body {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.terms-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.terms-section:last-of-type {
+  border-bottom: none;
+}
+
+.terms-section h2 {
+  font-size: 1.75rem;
+  color: #1e40af;
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.terms-section p {
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.terms-section ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.terms-section li {
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+/* Critical Sections */
+.critical-section {
+  background: #fef2f2;
+  border-left: 4px solid #dc2626;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.critical-warning {
+  background: rgba(220, 38, 38, 0.1);
+  border-left: 4px solid #dc2626;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.critical-warning h3 {
+  color: #dc2626;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+/* Subsection Styles */
+.subsection {
+  margin: 2rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid #e5e7eb;
+}
+
+.subsection h3 {
+  font-size: 1.25rem;
+  color: #374151;
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+/* Highlight Box */
+.highlight-box {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+  font-weight: 600;
+  color: #9a3412;
+  text-align: center;
+}
+
+/* Contact Box */
+.contact-box {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.contact-box h2 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  border: none;
+}
+
+.contact-box p {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.contact-link {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.75rem 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Footer Update */
+.terms-of-service .footer-bottom {
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.terms-of-service .footer-bottom p:first-child {
+  font-weight: 600;
+}
+
+/* Responsive Design for Terms of Service */
+@media (max-width: 768px) {
+  .terms-content {
+    padding: 100px 0 40px;
+  }
+
+  .terms-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .terms-section h2 {
+    font-size: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .section-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+  .subsection h3 {
+    font-size: 1.125rem;
+  }
+
+  .contact-box {
+    padding: 2rem 1.5rem;
+  }
+
+  .contact-link {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  .terms-body {
+    padding: 0 1rem;
+  }
+}
