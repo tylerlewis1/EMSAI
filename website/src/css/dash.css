@@ -76,9 +76,7 @@ a{
     width: 100vw;
     height: min-content;
 }
-.logo{
-    padding: 10px;
-}
+
 /* content */
 .content {
     display: block;
@@ -96,11 +94,13 @@ a{
   .closeSideBar{
     display: block;
     position:absolute;
-    right: 20px;
+    left: 20px;
+    top: 20px;
   }
   .closeSideBar:hover{
     cursor: pointer;
   }
+ 
   .sidebar {
     position: fixed;
     top: 0;
@@ -108,10 +108,17 @@ a{
     height: 100vh;
     transform: translateX(-100%);
     z-index: 100;
+    padding-top: 90px;
+  }
+  .logo{
+    display: none;
   }
 
   .sidebar.open {
     transform: translateX(0);
+    .logo{
+      display: none;
+    }
   }
   .menuToggle {
     display: inline-block;
@@ -128,3 +135,4 @@ a{
     }
     
 }
+
