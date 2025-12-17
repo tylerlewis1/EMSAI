@@ -10,6 +10,7 @@ export default function Siginup() {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [name, setName] = useState("");
+    const [org, setOrg] = useState("");
     const [checked, setChecked] = useState(false);
     const handleSignup = async(e) => {
       e.preventDefault();
@@ -19,7 +20,8 @@ export default function Siginup() {
                 setDoc(userdocRef, {
                     Name: name,
                     Phone: phone,
-                    Credits: 25,
+                    Credits: 0,
+                    Org: org,
                     Sessions: [],
                     TOSAKNOLAGED: new Date()
                 });
@@ -53,6 +55,13 @@ export default function Siginup() {
           required="true"
           type="tel"
           placeholder="Phone Number"
+        />
+        <input
+          style={styles.input}
+          onChange={(e) => setOrg(e.target.value)}
+          value={org}
+          required="false"
+          placeholder="Organization"
         />
         <input
           style={styles.input}
