@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import {signInWithEmailAndPassword, sendPasswordResetEmail} from "firebase/auth";
+import {signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged} from "firebase/auth";
 import {auth} from "../firebase";
 import {useNavigate} from "react-router-dom";
 export default function Signin() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const nav = useNavigate();
-  useEffect(() => {
-    if(auth.currentUser != null){
-       nav("/dash");
+ useEffect(() => {
+  const unsub = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      nav("/dash");
     }
-  }, [auth]);
+  });
+
+  return () => unsub();
+}, []);
+
 
   const forgotPass = async () => {
     if(!email){
@@ -34,8 +39,12 @@ export default function Signin() {
                 nav("/dash");
             });
         } catch(error) {
+          if(error.code == "auth/invalid-credential"){
+            alert("Invalid username or password");
+            return;
+          }
             alert("there was a error");
-            console.log(error);
+            console.log(error.code);
         }
     }
     
