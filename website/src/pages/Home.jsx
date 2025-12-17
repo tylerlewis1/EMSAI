@@ -1,14 +1,14 @@
 import "../css/Hometemp.css";
-
+import { useState } from "react";
 function Home() {
+  const [playing, setPlaying] = useState(false);
   return (
     <div className="modern-app">
       {/* Animated Header with Glassmorphism */}
       <header className="modern-header">
         <div className="header-container">
           <div className="logo">
-            <span className="logo-icon">🚑</span>
-            <span className="logo-text">GPTEMS</span>
+            <img style={{width: "150px", left: "50px", position: "absolute"}} className="logo-icon" src="./logo.png"/>
           </div>
           <nav className="nav-links">
             <a href="#features" className="nav-link">Features</a>
@@ -102,7 +102,7 @@ function Home() {
         <div className="container">
           <div className="section-header">
             <div className="section-badge">How It Works</div>
-            <h2 className="section-title">Transform Training in 3 Steps</h2>
+            <h2 className="section-title">Transform Training in 4 Steps</h2>
             <p className="section-subtitle">From setup to simulation in minutes</p>
           </div>
           
@@ -144,7 +144,21 @@ function Home() {
                 <ul className="timeline-features">
                   <li>Real-time voice responses</li>
                   <li>Dynamic condition changes</li>
-                  <li>Performance analytics</li>
+                  <li>Log all crew actions</li>
+                </ul>
+              </div>
+            </div>
+
+             <div className="timeline-item">
+              <div className="timeline-number">04</div>
+              <div className="timeline-content">
+                <div className="timeline-icon">📄</div>
+                <h3>Performance Report</h3>
+                <p>Get realtime feedback on the call in a PDF.</p>
+                <ul className="timeline-features">
+                  <li>Dispatch Information</li>
+                  <li>Event log</li>
+                  <li>AI analysis</li>
                 </ul>
               </div>
             </div>
@@ -240,14 +254,20 @@ function Home() {
                     <span></span>
                   </div>
                 </div>
+               {(!playing) ? (
+                <>
                 <img 
                   src="https://i.ibb.co/qLGj6dYF/instructor.png" 
                   alt="Live Demo Preview" 
                   className="demo-image"
                 />
-                <div className="demo-play-btn">
+                <div onClick={() => setPlaying(true)} className="demo-play-btn">
                   <span className="play-icon">▶</span>
                 </div>
+                </>
+               ):(
+                  <iframe width="100%" height="350px" src="https://www.youtube.com/embed/_mrms_0r6a8?si=W69MmUtEuRq3yj86" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+               )}
               </div>
             </div>
           </div>
@@ -271,12 +291,12 @@ function Home() {
                   <span className="amount">$49</span>
                   <span className="period">/month</span>
                 </div>
-                <p className="price-description">Perfect for small teams</p>
+                <p className="price-description">Perfect for small to medium departments</p>
               </div>
               <div className="pricing-features">
                 <div className="feature">
                   <span className="check">✓</span>
-                  <span>10 Hours of Scenarios/month</span>
+                  <span>8 Scenarios/month</span>
                 </div>
                 <div className="feature">
                   <span className="check">✓</span>
@@ -299,7 +319,7 @@ function Home() {
               <div className="pricing-features">
                 <div className="feature">
                   <span className="check">✓</span>
-                  <span>25 Hours of Scenarios/month</span>
+                  <span>20 Scenarios/month</span>
                 </div>
                 <div className="feature">
                   <span className="check">✓</span>
@@ -313,25 +333,61 @@ function Home() {
               <div className="pricing-header">
                 <h3>Enterprise</h3>
                 <div className="price">
-                  <span className="amount">Custom</span>
+                  <span className="amount">$249</span>
+                  <span className="period">/month</span>
                 </div>
                 <p className="price-description">For large organizations</p>
               </div>
               <div className="pricing-features">
                 <div className="feature">
                   <span className="check">✓</span>
+                  <span>50 Scenarios/month</span>
+                </div>
+                <div className="feature">
+                  <span className="check">✓</span>
                   <span>Everything in Pro</span>
+                </div>
+                <div className="feature">
+                  <span className="check">✓</span>
+                  <span>Training & onboarding</span>
+                </div>
+              </div>
+              <a href="/signup" className="btn btn-primary full-width">Get Started</a>
+            </div>
+           <div className="pricing-card pricing-card-featured">
+            <div className="popular-badge">Best Value</div>
+              <div className="pricing-header">
+                <h3>Pay As You Go</h3>
+                <div className="price">
+                  <span className="amount">$79</span>
+                  <span className="period">/month</span>
+
+                </div>
+                <p className="price-description">Bring your own API key and just pay for what you use.</p>
+              </div>
+              <div className="pricing-features">
+                <div className="feature">
+                  <span className="check">✓</span>
+                  <span>Unlimited Scenarios/month</span>
+                </div>
+                <div className="feature">
+                  <span className="check">✓</span>
+                  <span>Everything in Enterprise</span>
                 </div>
 
                 <div className="feature">
                   <span className="check">✓</span>
                   <span>Training & onboarding</span>
                 </div>
+
+                 <div className="feature">
+                  <span className="check">✓</span>
+                  <span>Setup Assistance</span>
+                </div>
               </div>
-              <a href="mailto:tglewis247@gmail.com" className="btn btn-outline full-width">Contact Sales</a>
+              <a href="/signup" className="btn btn-primary full-width">Get Started</a>
             </div>
           </div>
-          
         
         </div>
       </section>
@@ -406,26 +462,26 @@ function Home() {
               <div className="footer-column">
                 <h4>Company</h4>
                 <a href="/about">About</a>
-                <a href="/careers">Careers</a>
-                <a href="/contact">Contact</a>
+                {/* <a href="/careers">Careers</a> */}
+                <a href="mailto:tglewis247@gmail.com">Contact</a>
                 <a href="/privacy">Privacy</a>
               </div>
               
               <div className="footer-column">
                 <h4>Contact</h4>
-                <p className="contact-info">hello@gptems.com</p>
-                <p className="contact-info">+1 (555) 123-4567</p>
-                <p className="contact-info">San Francisco, CA</p>
+                <p className="contact-info">tglewis247@gmail.com</p>
+                <p className="contact-info">+1 (608) 886-0388</p>
+                <p className="contact-info">La Crosse, WI</p>
               </div>
             </div>
           </div>
           
           <div className="footer-bottom">
-            <p>© 2025 GPTEMS. All rights reserved. Not affiliated with OpenAI.</p>
+            <p>2025 GPTEMS. Owned and operated by Aware LLC. Not affiliated with OpenAI.</p>
             <div className="footer-legal">
-              <a href="/terms">Terms</a>
+              <a href="/tos">Terms</a>
               <a href="/privacy">Privacy</a>
-              <a href="/cookies">Cookies</a>
+              {/* <a href="/cookies">Cookies</a> */}
             </div>
           </div>
         </div>
