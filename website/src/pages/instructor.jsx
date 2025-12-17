@@ -84,7 +84,7 @@ export default function Instructor() {
         },
       })
     );
-    addToLog(`Vitals: HR: ${sessionData.HR}, BP: ${sessionData.BPS + "/" + sessionData.BPD}, RR: ${sessionData.RR}, SPO2: ${sessionData.SPO2}, BGL: ${sessionData.BGL}`);
+    addToLog(`Vitals: HR: ${sessionData.HR}, BP: ${sessionData.BPS + "/" + sessionData.BPD}, RR: ${sessionData.RR}, SPO2: ${sessionData.SPO2}, BGL: ${sessionData.BGL}, EKG: ${sessionData.EKG}`);
     console.log("Vitals Pushed");
   };
 
