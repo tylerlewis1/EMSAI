@@ -1,7 +1,10 @@
 .session-list{
     padding: 10px;
-    width: 100%;
-    margin-left: 10px;
+    width: 95%;
+    margin-left: 5%;
+    background-color: #fffdfd;
+    padding: 25px;
+    border-radius: 20px;
 }
 .session{
     background-color: #fff;
@@ -13,7 +16,9 @@
 }
 .session:hover {
     transition: filter 500ms, transform 500ms;
-    cursor: pointer;
     filter: drop-shadow(5px 5px 8px rgba(0, 0, 0, 0.1));
     transform: translateY(-2px);
+}
+.insbtn:hover{
+    cursor: pointer;
 }
