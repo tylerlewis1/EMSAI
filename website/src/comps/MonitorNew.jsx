@@ -12,6 +12,12 @@ export default function MonitorNew({v, setV}) {
       RR: v.RR
     });
     rhythmRef.current = getCurrentRhythm();
+    if(rhythmRef.current == "svt"){
+      setRates({
+        HR: 200,
+        RR: v.RR
+      });
+    }
     // Regenerate the static EKG data when rhythm changes
     generateStaticEKGData();
   }, [v.HR, v.RR, v.EKG]);
@@ -56,31 +62,52 @@ export default function MonitorNew({v, setV}) {
       }
     },
     vtach: {
-      getBeat: (beatTime) => {
-        if (beatTime < 0.1) return 0;
-        if (beatTime < 0.2) return 0.9;   // Wide R wave
-        if (beatTime < 0.3) return -0.7;  // Deep S wave
-        if (beatTime < 0.35) return 0.5;  // Secondary R
-        if (beatTime < 0.4) return 0;
-        return 0;
+       generate: (x) => {
+        // Consistent chaotic pattern based on position
+        const base = Math.sin(x * 0.0) * 0.6;
+        const chaos = Math.sin(x * 0.23 + 1.2) * 0.4;
+        return base + chaos;
       }
     },
     vfib: {
+      generate: (x, beatTime) => {
+        // Consistent chaotic pattern based on position
+        const base = Math.random(x) * 0.2;
+        return base;
+      }
+    },
+    pollymorphic: {
       generate: (x) => {
         // Consistent chaotic pattern based on position
-        const base = Math.sin(x * 0.1) * 0.6;
+        const base = Math.sin(x * 0.25) * 0.8;
         const chaos = Math.sin(x * 0.23 + 1.2) * 0.4;
         return base + chaos;
       }
     },
     afib: {
-      generate: (x) => {
-        // Irregular pattern based on position
-        const base = Math.sin(x * 0.08) * 0.3;
-        // Random QRS complexes at fixed positions
-        if (x % 40 < 3) return Math.min(0.8, base + 0.6);
-        if (x % 60 < 3) return Math.max(-0.4, base - 0.3);
-        return base;
+      getBeat: (beatTime) => {
+        //TODO
+        
+        if (beatTime < 0.1) return 0;
+        if (beatTime < 0.2) return 0;
+        if (beatTime < 0.25) return -0.2; // Q wave
+        if (beatTime < 0.3) return 1.0;   // R wave
+        if (beatTime < 0.35) return -0.3; // S wave
+        if (beatTime < 0.4) return 0;
+        if (beatTime < 0.5) return 0.4;   // T wave
+        return 0;
+      }
+    },
+     junctional: {
+      getBeat: (beatTime) => {
+       if (beatTime < 0.1) return 0;
+        if (beatTime < 0.2) return 0;
+        if (beatTime < 0.25) return -0.2; // Q wave
+        if (beatTime < 0.3) return 1.0;   // R wave
+        if (beatTime < 0.35) return -0.3; // S wave
+        if (beatTime < 0.4) return 0;
+        if (beatTime < 0.5) return 0.4;   // T wave
+        return 0;
       }
     },
     aflutter: {
@@ -315,24 +342,6 @@ export default function MonitorNew({v, setV}) {
         };
      
   }, [rates.HR, rates.RR, v.EKG]);
-
-  // Get rhythm display name
-  const getRhythmDisplayName = () => {
-    const rhythm = rhythmRef.current;
-    const names = {
-      "svt": "SVT",
-      "afib": "ATRIAL FIB", 
-      "vtach": "V-TACH",
-      "vfib": "V-FIB",
-      "aflutter": "A-FLUTTER",
-      "pvc": "PVC",
-      "asystole": "ASYSTOLE",
-      "brady": "BRADYCARDIA",
-      "normal": "NORMAL SINUS"
-    };
-    return names[rhythm] || "NORMAL SINUS";
-  };
-
   return (
     <div className="medical-monitor">
       {/* Header */}
