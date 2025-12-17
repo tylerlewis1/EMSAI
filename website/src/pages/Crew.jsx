@@ -25,7 +25,6 @@ export default function Crew() {
     const idleTimerRef = useRef(null);
     const instructionsRef = useRef("");
     const firstAiItemIdRef = useRef(null); // Ref to track the first AI response ID
-
     // ===========================================================
     // Data Channel Commands for Truncation
     // ===========================================================
@@ -440,7 +439,8 @@ export default function Crew() {
     // ===========================================================
     // 4. Push To Talk (Server VAD logic)
     // ===========================================================
-    const startTalking = () => {
+    const startTalking = (event) => {
+        if (event.repeat) { return; }
         const mic = micStreamRef.current;
         if (!mic) return;
         mic.getAudioTracks()[0].enabled = true; // Enable track to start VAD processing
@@ -487,16 +487,19 @@ export default function Crew() {
                     </>
                 ):(
                     <section>
-                        <button
-                            onMouseDown={startTalking}
-                            onMouseUp={stopTalking}
-                            onMouseLeave={stopTalking}
-                            onTouchStart={startTalking}
-                            onTouchEnd={stopTalking}
-                            className={`pttbtn ${isTalking ? 'ptt-active' : ''}`}
-                        >
-                        <MonitorNew v={v} setV={setV} />
-                        </button>
+                       
+                            <button
+                                onMouseDown={startTalking}
+                                onMouseUp={stopTalking}
+                                onMouseLeave={stopTalking}
+                                onTouchStart={startTalking}
+                                onKeyDown={startTalking} 
+                                onKeyUp={stopTalking}
+                                onTouchEnd={stopTalking}
+                                className={`pttbtn ${isTalking ? 'ptt-active' : ''}`}
+                            >
+                                <MonitorNew v={v} setV={setV} />
+                            </button>
                     </section>
                 )}
                 </>
